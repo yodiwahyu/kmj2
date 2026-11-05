@@ -605,6 +605,9 @@ document.querySelectorAll("[data-contours]").forEach(function (svg) {
 <script>
 (function () {
   "use strict";
+
+  // Kumpulan motivasi dan tips kerja KMJ 2. 
+  // Mas Yodi bisa menambahkan itemnya hingga 31 buah agar setiap tanggal punya pesan unik.
   const entries = [
     { quote:"Kemajuan kecil yang dilakukan setiap hari akan membawa hasil besar.", author:"Pengingat untuk diri sendiri", tip:"Awali pekerjaan dengan memastikan area kerja rapi dan jalur evakuasi tidak terhalang." },
     { quote:"Bekerja dengan teliti hari ini berarti menjaga kualitas untuk hari esok.", author:"Semangat kerja KMJ 2", tip:"Periksa kembali hasil pekerjaan sebelum diteruskan ke proses berikutnya." },
@@ -621,22 +624,40 @@ document.querySelectorAll("[data-contours]").forEach(function (svg) {
     { quote:"Saling menghargai membuat tempat kerja menjadi lebih nyaman dan produktif.", author:"Budaya saling menghormati", tip:"Hargai perbedaan, hindari candaan yang merendahkan, dan gunakan bahasa yang santun." },
     { quote:"Berikan yang terbaik bukan untuk menjadi sempurna, tetapi untuk terus menjadi lebih baik.", author:"Satu langkah lebih baik", tip:"Selesaikan pekerjaan sesuai standar tanpa mengabaikan keselamatan." }
   ];
+
   function renderDailyContent() {
     const quote = document.getElementById("daily-quote");
     const author = document.getElementById("daily-author");
     const tip = document.getElementById("daily-tip");
     const date = document.getElementById("motivation-date");
+
     if (!quote || !author || !tip || !date) return;
+
     const now = new Date();
-    const firstDay = new Date(now.getFullYear(), 0, 0);
-    const dayOfYear = Math.floor((now - firstDay) / 86400000);
-    const item = entries[(dayOfYear + now.getFullYear()) % entries.length];
+
+    // [PERBAIKAN]: Gunakan tanggal hari ini (1-31) sebagai urutan.
+    // getDate() menghasilkan angka 1-31. Dikurangi 1 karena urutan array dimulai dari 0.
+    // % entries.length berfungsi sebagai pengaman: jika jumlah motivasi kurang dari 31, ia akan otomatis mengulang dari awal tanpa error.
+    const todayIndex = (now.getDate() - 1) % entries.length;
+    const item = entries[todayIndex];
+
     quote.textContent = item.quote;
     author.textContent = "— " + item.author;
     tip.textContent = item.tip;
-    date.textContent = new Intl.DateTimeFormat("id-ID", { weekday:"long", day:"numeric", month:"long", year:"numeric" }).format(now);
+
+    // Menampilkan format tanggal rapi (Contoh: Kamis, 5 November 2026)
+    date.textContent = new Intl.DateTimeFormat("id-ID", { 
+      weekday: "long", 
+      day: "numeric", 
+      month: "long", 
+      year: "numeric" 
+    }).format(now);
   }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", renderDailyContent, { once:true });
-  else renderDailyContent();
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", renderDailyContent, { once: true });
+  } else {
+    renderDailyContent();
+  }
 })();
 </script>
