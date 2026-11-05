@@ -1,0 +1,634 @@
+<title>Portal Karyawan KMJ 2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: tampilan ala aplikasi. Header hijau berisi salam, kartu sambutan, layanan karyawan, motivasi dan tips harian, kanal sosial, serta navigasi bawah. Di layar lebar tampil sebagai satu kolom ponsel di tengah. */
+:root {
+  --bg: #EFF5F0;
+  --stage: #CFE3D5;
+  --surface: #FFFFFF;
+  --fg: #0F2217;
+  --muted: #53695A;
+  --line: #D3E1D6;
+  --green: #0E8A4F;
+  --green-soft: #DDEFE3;
+  --green-line: rgba(14, 138, 79, .3);
+  --glow: rgba(14, 138, 79, .12);
+  --on-green: #FFFFFF;
+  --shadow: rgba(10, 60, 35, .14);
+
+  /* bagian yang sama di kedua tema */
+  --head1: #0D8F54;
+  --head2: #095F37;
+  --hero-bg1: #0B3624;
+  --hero-bg2: #061C13;
+  --hero-green: #7BE0A4;
+  --hero-line: rgba(123, 224, 164, .2);
+  --amber: #FFC066;
+  --amber-ink: #2B1A00;
+  --g-green: linear-gradient(150deg, #34D78F, #0E8A4F);
+  --g-amber: linear-gradient(150deg, #FFD27A, #F7871F);
+  --g-teal: linear-gradient(150deg, #52DDE6, #0A8CA5);
+  --g-coral: linear-gradient(150deg, #FF9F88, #E8493C);
+  --g-violet: linear-gradient(150deg, #B9A0FF, #6A44E4);
+
+  --font-body: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #08150E;
+    --stage: #030A06;
+    --surface: #102319;
+    --fg: #EAF4ED;
+    --muted: #96AE9D;
+    --line: #1D3728;
+    --green: #4FD08A;
+    --green-soft: rgba(79, 208, 138, .14);
+    --green-line: rgba(79, 208, 138, .32);
+    --glow: rgba(79, 208, 138, .14);
+    --on-green: #06210F;
+    --shadow: rgba(0, 0, 0, .55);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #08150E;
+  --stage: #030A06;
+  --surface: #102319;
+  --fg: #EAF4ED;
+  --muted: #96AE9D;
+  --line: #1D3728;
+  --green: #4FD08A;
+  --green-soft: rgba(79, 208, 138, .14);
+  --green-line: rgba(79, 208, 138, .32);
+  --glow: rgba(79, 208, 138, .14);
+  --on-green: #06210F;
+  --shadow: rgba(0, 0, 0, .55);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  padding-bottom: 104px;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  background: var(--head1); z-index: 40;
+}
+.app { width: 100%; margin-inline: auto; position: relative; overflow: hidden; background: var(--bg); }
+.pad {
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* Animasi */
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes drift { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(8%, 6%, 0) scale(1.12); } }
+@keyframes sunpulse { from { opacity: .25; } to { opacity: .5; } }
+.rise { animation: rise .8s cubic-bezier(.2, .7, .2, 1) both; animation-delay: var(--d, 0s); }
+
+.contours { position: absolute; z-index: -1; pointer-events: none; aspect-ratio: 1; }
+.contours path { fill: none; stroke: var(--cs); stroke-width: 1; }
+
+/* Header elegan: identitas perusahaan, salam, tanggal, dan aksen dekoratif */
+.head { position:relative; isolation:isolate; overflow:hidden; color:#fff; background:linear-gradient(128deg,#087B49 0%,#09643D 52%,#063D2B 100%); border-radius:0 0 32px 32px; padding:22px 0 78px; box-shadow:0 16px 34px -24px rgba(0,35,18,.65); }
+.head::before,.head::after { content:""; position:absolute; z-index:-1; border-radius:50%; pointer-events:none; }
+.head::before { width:270px; height:270px; right:-115px; top:-165px; border:1px solid rgba(255,255,255,.18); box-shadow:0 0 0 22px rgba(255,255,255,.035),0 0 0 48px rgba(255,255,255,.025); }
+.head::after { width:150px; height:150px; left:-92px; bottom:-100px; background:rgba(255,255,255,.07); filter:blur(2px); }
+.head .contours { --cs:rgba(255,255,255,.12); right:-32%; top:-72%; width:95%; opacity:.8; }
+.head-inner { position:relative; z-index:1; }
+.head-kicker { margin:0 0 13px; color:#D7F5E3; font-size:.66rem; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
+.row { display:flex; align-items:center; gap:13px; min-width:0; }
+.logo { width:56px; height:56px; flex:none; border-radius:18px; background:#fff; box-shadow:0 8px 22px rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.65); display:grid; place-items:center; overflow:hidden; }
+.logo img { width:100%; height:100%; object-fit:contain; padding:6px; display:block; }
+.logo .mono-fallback { font-weight:800; font-size:15px; color:#0B3624; }
+.who { flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; }
+.hello { font-size:.78rem; color:#D7F5E3; line-height:1.3; font-weight:600; }
+.name { font-weight:800; font-size:clamp(1.05rem,4.5vw,1.25rem); line-height:1.2; letter-spacing:-.025em; overflow-wrap:anywhere; }
+.head-sub { margin-top:4px; color:rgba(255,255,255,.78); font-size:.68rem; font-weight:600; letter-spacing:.025em; }
+.chip { flex:none; display:inline-flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:10px; letter-spacing:.025em; background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.25); padding:7px 9px; border-radius:12px; white-space:nowrap; backdrop-filter:blur(8px); }
+.chip::before { content:""; width:6px; height:6px; border-radius:50%; background:#FFD27A; box-shadow:0 0 0 3px rgba(255,210,122,.16); }
+
+/* Kartu sambutan */
+.welcome-wrap { margin-top: -46px; position: relative; z-index: 2; }
+.welcome {
+  position: relative; overflow: hidden; isolation: isolate; color: #F2F8F3;
+  background: linear-gradient(160deg, var(--hero-bg1), var(--hero-bg2) 80%);
+  border: 1px solid rgba(123, 224, 164, .3); border-radius: 24px;
+  box-shadow: 0 20px 40px -14px rgba(0, 25, 12, .55);
+  padding: 20px 20px calc(21.25% + 14px);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.welcome::before {
+  content: ""; position: absolute; z-index: -1; left: -30%; top: -40%; width: 80%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(70, 200, 125, .26), rgba(70, 200, 125, 0));
+  animation: drift 18s ease-in-out infinite alternate;
+}
+.welcome .contours { --cs: var(--hero-line); right: -28%; top: -38%; width: 85%; }
+.peaks { position: absolute; z-index: -1; left: 0; right: 0; bottom: 0; width: 100%; height: auto; display: block; pointer-events: none; }
+.sunglow { animation: sunpulse 5s ease-in-out infinite alternate; }
+.welcome h1 { margin: 0; font-weight: 800; font-size: clamp(1.45rem, 6.6vw, 1.9rem); line-height: 1.15; letter-spacing: -.025em; text-wrap: balance; max-width: 16ch; }
+.welcome h1 em { font-style: normal; color: var(--amber); background: linear-gradient(transparent 84%, rgba(255, 192, 102, .4) 84% 94%, transparent 94%); }
+.company { margin: 0; font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #CDE9D6; }
+.tagline { margin: 2px 0 0; padding-left: 12px; max-width: 28ch; border-left: 3px solid var(--amber); font-weight: 600; font-size: .9375rem; line-height: 1.4; text-wrap: balance; }
+
+/* Bagian umum */
+.section { margin-top: 28px; scroll-margin-top: 12px; }
+.sec-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+h2 { margin: 0; font-weight: 800; font-size: 1.1875rem; line-height: 1.25; letter-spacing: -.015em; }
+.hint { color: var(--muted); font-size: .8125rem; }
+
+/* Grid layanan */
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 20px 12px 18px; box-shadow: 0 10px 28px -16px var(--shadow); }
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px 6px; }
+.tile {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 9px; min-width: 0;
+  text-decoration: none; color: inherit; text-align: center; -webkit-tap-highlight-color: transparent; border-radius: 16px;
+}
+.t-icon {
+  position: relative; width: 58px; height: 58px; border-radius: 18px; display: grid; place-items: center; color: #FFFFFF;
+  background: var(--g-green);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), 0 10px 18px -8px rgba(0, 0, 0, .45);
+  transition: transform .2s ease;
+}
+.t-icon svg { width: 28px; height: 28px; }
+.c-amber { background: var(--g-amber); }
+.c-teal { background: var(--g-teal); }
+.c-coral { background: var(--g-coral); }
+.c-violet { background: var(--g-violet); }
+.tile:hover .t-icon { transform: translateY(-3px) rotate(-3deg); }
+.tile:active .t-icon { transform: scale(.92); }
+.tile:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; }
+.t-label { font-size: .78125rem; font-weight: 600; line-height: 1.25; text-wrap: balance; overflow-wrap: anywhere; }
+.t-tag {
+  position: absolute; top: -6px; right: -8px; z-index: 1;
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: .06em; text-transform: uppercase;
+  background: var(--amber); color: var(--amber-ink); padding: 2px 6px; border-radius: 999px;
+}
+.tile-soon { cursor: default; }
+.tile-soon .t-icon { background: transparent; border: 2px dashed var(--green-line); color: var(--green); box-shadow: none; }
+.tile-soon .t-label { color: var(--muted); }
+
+
+/* Motivasi dan tips harian */
+.daily-card {
+  position: relative; overflow: hidden; isolation: isolate;
+  padding: 22px; border-radius: 24px; color: #F2F8F3;
+  background: radial-gradient(circle at 100% 0%, rgba(91,210,143,.28), transparent 42%), linear-gradient(145deg, #092D20, #0A6840 78%, #087A49);
+  border: 1px solid rgba(123, 224, 164, .28);
+  box-shadow: 0 14px 30px -16px var(--shadow);
+}
+.daily-card::after {
+  content: ""; position: absolute; z-index: -1; width: 190px; height: 190px;
+  right: -70px; bottom: -100px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 0 0 18px rgba(255,255,255,.035), 0 0 0 38px rgba(255,255,255,.025);
+}
+.daily-mark { color: var(--amber); font-family: Georgia, serif; font-size: 64px; line-height: .75; height: 36px; }
+.daily-quote { margin: 8px 0 10px; font-size: 1.08rem; line-height: 1.55; font-weight: 700; max-width: 34ch; }
+.daily-author { margin: 0; color: #CDE9D6; font-size: .8rem; font-weight: 600; }
+.daily-divider { height: 1px; background: rgba(255,255,255,.2); margin: 18px 0 14px; }
+.daily-tip-label { display:flex; align-items:center; gap:7px; margin: 0 0 7px; color: #FFD27A; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .08em; font-weight: 700; }
+.daily-tip { margin: 0; color: #F2F8F3; font-size: .9rem; line-height: 1.6; max-width: 42ch; }
+.daily-date-pill { display:inline-flex; align-items:center; gap:6px; color:var(--muted); font-size:.75rem; font-weight:700; }
+.daily-date-pill::before { content:"✦"; color:var(--green); }
+.daily-quote { min-height:3.2em; }
+.daily-author { min-height:1.2em; }
+
+/* Konten motivasi diisi oleh script setelah struktur halaman siap. */
+
+/* Media sosial */
+.social-list { display: grid; gap: 10px; }
+.card {
+  --mx: 50%; --my: 50%;
+  position: relative; overflow: hidden; isolation: isolate;
+  display: flex; align-items: center; gap: 14px; min-width: 0; padding: 12px 16px 12px 12px;
+  text-decoration: none; color: inherit; background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+  transition: transform .25s ease, border-color .25s ease;
+}
+.card::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0; transition: opacity .25s ease; background: radial-gradient(260px circle at var(--mx) var(--my), var(--glow), transparent 65%); }
+.card:hover { transform: translateY(-2px); border-color: var(--green-line); }
+.card:hover::before { opacity: 1; }
+.card:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; }
+.card .t-icon { width: 46px; height: 46px; border-radius: 50%; flex: none; }
+.card .t-icon svg { width: 22px; height: 22px; }
+.body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.title { font-weight: 700; font-size: .96875rem; line-height: 1.3; }
+.desc { color: var(--muted); font-family: var(--font-mono); font-size: 12.5px; overflow-wrap: anywhere; }
+.arrow { flex: none; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; color: var(--green); border: 1px solid var(--green-line); transition: background .25s ease, color .25s ease; }
+.arrow svg { width: 15px; height: 15px; }
+.card:hover .arrow { background: var(--green); color: var(--on-green); }
+
+footer { margin-top: 36px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+footer svg { width: 32px; height: 32px; color: var(--green); }
+footer p { margin: 0; color: var(--muted); font-size: .8125rem; }
+footer .sign { color: var(--fg); font-weight: 700; font-size: .9375rem; }
+
+/* Tab bawah */
+.tabbar {
+  position: fixed; z-index: 30; left: 0; right: 0; bottom: 0;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+  background: var(--surface); border-top: 1px solid var(--line);
+  box-shadow: 0 -10px 30px -16px var(--shadow);
+  padding: 8px max(16px, env(safe-area-inset-right, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+}
+.tab { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 2px 0; text-decoration: none; color: var(--muted); font-size: .6875rem; font-weight: 600; -webkit-tap-highlight-color: transparent; border-radius: 12px; }
+.tab .ti { width: 56px; height: 30px; border-radius: 15px; display: grid; place-items: center; transition: background .2s ease, color .2s ease; }
+.tab svg { width: 22px; height: 22px; }
+.tab.on { color: var(--green); }
+.tab.on .ti { background: var(--green-soft); }
+.tab:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
+
+/* Layar lebar: satu kolom ponsel di tengah */
+@media (min-width: 600px) {
+  body { background: var(--stage); padding-block: 16px 120px; }
+  .app { max-width: 480px; border-radius: 32px; box-shadow: 0 30px 80px -20px var(--shadow); border: 1px solid var(--line); }
+  .tabbar { left: 50%; right: auto; width: 480px; transform: translateX(-50%); bottom: 16px; border-radius: 0 0 32px 32px; border: 1px solid var(--line); border-top: 1px solid var(--line); }
+  body::before { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise, .welcome::before, .sunglow { animation: none; }
+  .t-icon, .card, .arrow, .dot, .tab .ti { transition: none; }
+  .tile:hover .t-icon, .card:hover { transform: none; }
+}
+</style>
+<!--BODY-->
+<div class="app" id="beranda">
+  <header class="head">
+    <svg class="contours" data-contours aria-hidden="true" viewBox="0 0 400 400"></svg>
+    <div class="pad head-inner">
+      <p class="head-kicker rise" style="--d:.01s">People • Culture • Together</p>
+      <div class="row rise" style="--d:.05s">
+        <div class="logo" id="logo" aria-label="Logo PT Kanindo Makmur Jaya"></div>
+        <div class="who">
+          <span class="hello" id="hello">Selamat datang,</span>
+          <span class="name">Sobat KMJ</span>
+          <span class="head-sub"></span>
+        </div>
+        <span class="chip" id="today">Hari ini</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="welcome-wrap pad">
+    <section class="welcome rise" style="--d:.22s">
+      <svg class="contours" data-contours aria-hidden="true" viewBox="0 0 400 400"></svg>
+      <svg class="peaks" viewBox="0 70 800 170" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <defs>
+          <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFE3A0"/><stop offset="1" stop-color="#FF9A3D"/></radialGradient>
+          <radialGradient id="sunHalo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FFB45A" stop-opacity=".9"/><stop offset="1" stop-color="#FFB45A" stop-opacity="0"/></radialGradient>
+        </defs>
+        <circle class="sunglow" cx="610" cy="118" r="120" fill="url(#sunHalo)"/>
+        <circle cx="610" cy="118" r="44" fill="url(#sunGrad)"/>
+        <path fill="#15583B" d="M0 150 L70 110 L120 135 L205 70 L275 120 L340 92 L430 140 L520 95 L600 132 L690 80 L760 115 L800 100 V240 H0Z"/>
+        <path fill="#0E4430" d="M0 185 L80 150 L150 178 L240 128 L330 175 L410 145 L500 185 L590 140 L680 180 L760 150 L800 165 V240 H0Z"/>
+        <path fill="#082B1D" d="M0 215 L90 190 L170 212 L260 182 L350 210 L450 188 L540 214 L640 192 L720 212 L800 198 V240 H0Z"/>
+        <g fill="#04170E">
+          <path d="M40 188 L48 206 L44 206 L51 220 L29 220 L36 206 L32 206Z"/>
+          <path d="M66 194 L73 209 L70 209 L76 221 L56 221 L62 209 L59 209Z"/>
+          <path d="M300 190 L308 207 L304 207 L311 221 L289 221 L296 207 L292 207Z"/>
+          <path d="M326 196 L333 210 L330 210 L336 222 L316 222 L322 210 L319 210Z"/>
+          <path d="M690 192 L698 209 L694 209 L701 222 L679 222 L686 209 L682 209Z"/>
+          <path d="M716 198 L723 211 L720 211 L726 223 L706 223 L712 211 L709 211Z"/>
+        </g>
+      </svg>
+      <h1>Selamat bergabung menjadi <em>keluarga</em></h1>
+      <p class="company">PT Kanindo Makmur Jaya &middot; Factory 2</p>
+      <p class="tagline">Let's grow and build a better future together!</p>
+    </section>
+  </div>
+
+  <main>
+    <section class="section pad" id="layanan">
+      <div class="sec-top">
+        <h2>Layanan karyawan</h2>
+        <span class="hint">Ketuk untuk membuka</span>
+      </div>
+      <div class="panel">
+        <div class="tiles" id="menu"></div>
+        
+      </div>
+    </section>
+
+    <section class="section pad" id="motivasi">
+      <div class="sec-top">
+        <h2>Motivasi hari ini</h2>
+        <span class="daily-date-pill" id="motivation-date">Inspirasi harian</span>
+      </div>
+      <article class="daily-card rise" aria-live="polite">
+        <div class="daily-mark" aria-hidden="true">“</div>
+        <p class="daily-quote" id="daily-quote">Setiap langkah kecil yang dilakukan dengan sungguh-sungguh membawa kita lebih dekat pada hasil terbaik.</p>
+        <p class="daily-author" id="daily-author">— Semangat Keluarga KMJ 2</p>
+        <div class="daily-divider"></div>
+        <p class="daily-tip-label"><span aria-hidden="true">✦</span> TIPS KERJA HARI INI</p>
+        <p class="daily-tip" id="daily-tip">Mulailah pekerjaan dengan memahami instruksi, menyiapkan area kerja, dan selalu mengutamakan keselamatan.</p>
+      </article>
+    </section>
+
+    <section class="section pad" id="sosial">
+      <div class="sec-top"><h2>Ikuti Kanindo 2</h2></div>
+      <div class="social-list" id="social"></div>
+    </section>
+  </main>
+
+  <footer class="pad">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 19l6.5-11 4 6.5L15 11l7 8z"/><path d="M6.8 12.2l1.7-1.4 1.6 1.5"/></svg>
+    <p class="sign">Terima kasih sudah menjadi bagian dari keluarga kami.</p>
+    <p>PT Kanindo Makmur Jaya &middot; Factory 2</p>
+    <p><a href="wa.me/+6282231643156" style="color:var(--green);font-weight:700;text-decoration:none">Hubungi HRD Kanindo 2</a></p>
+  </footer>
+</div>
+
+<nav class="tabbar" aria-label="Navigasi utama">
+  <a class="tab on" href="#beranda" data-go="beranda">
+    <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7v8a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19z"/></svg></span>
+    Beranda
+  </a>
+  <a class="tab" href="#layanan" data-go="layanan">
+    <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.8"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.8"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.8"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.8"/></svg></span>
+    Layanan
+  </a>
+  <a class="tab" href="#sosial" data-go="sosial">
+    <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span>
+    Sosial
+  </a>
+</nav>
+
+<script>
+/* ============================================================
+   CARA MENAMBAH ISI HALAMAN
+   Semua ada di tiga daftar di bawah. Salin satu blok { ... }, ganti isinya, simpan, lalu upload ulang.
+
+   MENUS (ikon di bagian Layanan karyawan)
+     title : nama lengkap layanan
+     short : nama pendek di bawah ikon
+     desc  : keterangan singkat layanan
+     url   : alamat web app
+     icon  : calc, ticket, shield, doc, calendar, clock, link
+     color : green, amber, teal, coral, violet
+     tag   : opsional, misalnya "Baru"
+    DAILY_CONTENT (motivasi dan tips yang berganti setiap tanggal)
+
+   SOCIALS (bagian Ikuti Kanindo 2)
+     title, desc, url, icon (instagram, tiktok, link), color
+   ============================================================ */
+
+const LOGO_URL = "https://raw.githubusercontent.com/yodiwahyu/berkas/main/logo%20kanindo.png";
+
+/* Tampilkan kotak "Segera hadir" di sebelah ikon layanan (true / false) */
+const SHOW_SOON_TILE = true;
+
+const MENUS = [
+  {
+    title: "Simulasi Gaji & Lembur",
+    short: "Gaji & Lembur",
+    desc: "Hitung perkiraan gaji dan upah lembur kamu.",
+    url: "https://simulasigaji.vercel.app/",
+    icon: "calc",
+    color: "green"
+  },
+  {
+    title: "Cek Voucher",
+    short: "Cek Voucher",
+    desc: "Cek apakah kamu mendapat voucher atau tidak.",
+    url: "https://voucherkmj2.vercel.app/",
+    icon: "ticket",
+    color: "amber"
+  },
+  {
+    title: "Cek Nomor BPJS",
+    short: "Cek BPJS",
+    desc: "Lihat nomor BPJS kamu.",
+    url: "https://bpjskmj2.vercel.app/",
+    icon: "shield",
+    color: "teal"
+  }
+];
+
+
+const SOCIALS = [
+  {
+    title: "Instagram Recruitment",
+    desc: "@recruitment_kanindo2",
+    url: "https://www.instagram.com/recruitment_kanindo2/",
+    icon: "instagram",
+    color: "violet"
+  },
+  {
+    title: "TikTok Kanindo 2",
+    desc: "@kmj2.official",
+    url: "https://www.tiktok.com/@kmj2.official",
+    icon: "tiktok",
+    color: "coral"
+  }
+];
+
+/* ---------- Kode di bawah ini tidak perlu diubah ---------- */
+
+const ICONS = {
+  calc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2.5"/><rect x="8" y="6.5" width="8" height="3" rx="1"/><path d="M8.5 13h.01M12 13h.01M15.5 13h.01M8.5 16.5h.01M12 16.5h.01M15.5 16.5h.01"/></svg>',
+  ticket: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a2 2 0 0 0 0 6v2a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-2a2 2 0 0 1 0-6V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1z"/><path d="M14 6v12" stroke-dasharray="2 2.5"/></svg>',
+  shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6z"/><path d="M9 12l2.2 2.2L15.5 10"/></svg>',
+  doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>',
+  calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
+  clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>',
+  link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"/></svg>',
+  instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/></svg>',
+  tiktok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v11.2a3.7 3.7 0 1 1-3.7-3.7"/><path d="M14 3c.3 2.6 2 4.3 5 4.5"/></svg>',
+  spark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v5M12 15v5M4 12h5M15 12h5"/></svg>'
+};
+const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>';
+const ARROW_R = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+const REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function make(tag, cls, text) {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text !== undefined) n.textContent = text;
+  return n;
+}
+function external(a, url) {
+  a.href = url;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+}
+function colorClass(c) {
+  return ["amber", "teal", "coral", "violet"].indexOf(c) > -1 ? " c-" + c : "";
+}
+
+/* Ikon layanan */
+const menuEl = document.getElementById("menu");
+
+function tile(item, index) {
+  const a = make("a", "tile rise");
+  a.style.setProperty("--d", (0.35 + index * 0.07) + "s");
+  external(a, item.url);
+  a.title = item.desc || item.title;
+  a.setAttribute("aria-label", item.title);
+
+  const icon = make("span", "t-icon" + colorClass(item.color));
+  icon.innerHTML = ICONS[item.icon] || ICONS.link;
+  a.appendChild(icon);
+  if (item.tag) a.appendChild(make("span", "t-tag", item.tag));
+  a.appendChild(make("span", "t-label", item.short || item.title));
+  return a;
+}
+function soonTile(index) {
+  const d = make("div", "tile tile-soon rise");
+  d.style.setProperty("--d", (0.35 + index * 0.07) + "s");
+  const icon = make("span", "t-icon");
+  icon.innerHTML = ICONS.spark;
+  d.append(icon, make("span", "t-label", "Segera hadir"));
+  return d;
+}
+function renderMenu(list, withSoon) {
+  const nodes = list.map(tile);
+  if (withSoon && SHOW_SOON_TILE) nodes.push(soonTile(list.length));
+  menuEl.replaceChildren(...nodes);
+}
+renderMenu(MENUS, true);
+
+
+
+/* Media sosial */
+const socialEl = document.getElementById("social");
+SOCIALS.forEach(function (s, i) {
+  const a = make("a", "card rise");
+  a.style.setProperty("--d", (0.2 + i * 0.1) + "s");
+  external(a, s.url);
+  a.addEventListener("pointermove", function (e) {
+    const r = a.getBoundingClientRect();
+    a.style.setProperty("--mx", (e.clientX - r.left) + "px");
+    a.style.setProperty("--my", (e.clientY - r.top) + "px");
+  });
+  const icon = make("span", "t-icon" + colorClass(s.color));
+  icon.innerHTML = ICONS[s.icon] || ICONS.link;
+  const body = make("span", "body");
+  body.append(make("span", "title", s.title), make("span", "desc", s.desc));
+  const arrow = make("span", "arrow");
+  arrow.innerHTML = ARROW;
+  a.append(icon, body, arrow);
+  socialEl.appendChild(a);
+});
+
+/* Garis kontur peta */
+document.querySelectorAll("[data-contours]").forEach(function (svg) {
+  const NS = "http://www.w3.org/2000/svg";
+  for (let k = 1; k <= 16; k++) {
+    const r = k * 11;
+    let d = "";
+    for (let i = 0; i <= 96; i++) {
+      const t = (i / 96) * Math.PI * 2;
+      const w = 1 + 0.09 * Math.sin(3 * t + k * 0.45) + 0.05 * Math.sin(5 * t - k * 0.7) + 0.03 * Math.sin(2 * t + k);
+      d += (i ? "L" : "M") + (200 + Math.cos(t) * r * w).toFixed(1) + " " + (200 + Math.sin(t) * r * w * 0.82).toFixed(1);
+    }
+    const p = document.createElementNS(NS, "path");
+    p.setAttribute("d", d + "Z");
+    svg.appendChild(p);
+  }
+});
+
+/* Logo, dengan inisial KMJ jika gambar gagal dimuat */
+(function () {
+  const box = document.getElementById("logo");
+  const img = new Image();
+  img.alt = "Logo PT Kanindo Makmur Jaya";
+  img.onerror = function () { box.replaceChildren(make("span", "mono-fallback", "KMJ")); };
+  img.src = LOGO_URL;
+  box.appendChild(img);
+})();
+
+/* Salam sesuai jam dan tanggal */
+(function () {
+  const h = new Date().getHours();
+  const salam = h < 11 ? "Selamat pagi" : h < 15 ? "Selamat siang" : h < 18 ? "Selamat sore" : "Selamat malam";
+  document.getElementById("hello").textContent = salam + ",";
+  try {
+    document.getElementById("today").textContent =
+      new Intl.DateTimeFormat("id-ID", { weekday: "short", day: "numeric", month: "short" }).format(new Date());
+  } catch (e) {
+    document.getElementById("today").hidden = true;
+  }
+})();
+
+/* Tab bawah */
+(function () {
+  const tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+  const ids = ["beranda", "layanan", "sosial"];
+  function targetOf(id) { return id === "beranda" ? null : document.getElementById(id); }
+  tabs.forEach(function (t) {
+    t.addEventListener("click", function (e) {
+      e.preventDefault();
+      const el = targetOf(t.dataset.go);
+      const behavior = REDUCED ? "auto" : "smooth";
+      if (!el) window.scrollTo({ top: 0, behavior: behavior });
+      else el.scrollIntoView({ behavior: behavior, block: "start" });
+    });
+  });
+  let raf = false;
+  function update() {
+    raf = false;
+    const y = window.scrollY + window.innerHeight * 0.4;
+    let active = "beranda";
+    ids.forEach(function (id) {
+      const el = targetOf(id);
+      if (el && el.getBoundingClientRect().top + window.scrollY <= y) active = id;
+    });
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) active = "sosial";
+    tabs.forEach(function (t) { t.classList.toggle("on", t.dataset.go === active); });
+  }
+  window.addEventListener("scroll", function () {
+    if (!raf) { raf = true; requestAnimationFrame(update); }
+  }, { passive: true });
+  update();
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  const entries = [
+    { quote:"Kemajuan kecil yang dilakukan setiap hari akan membawa hasil besar.", author:"Pengingat untuk diri sendiri", tip:"Awali pekerjaan dengan memastikan area kerja rapi dan jalur evakuasi tidak terhalang." },
+    { quote:"Bekerja dengan teliti hari ini berarti menjaga kualitas untuk hari esok.", author:"Semangat kerja KMJ 2", tip:"Periksa kembali hasil pekerjaan sebelum diteruskan ke proses berikutnya." },
+    { quote:"Kesuksesan tim dibangun dari kontribusi setiap orang.", author:"Semangat kebersamaan", tip:"Sampaikan informasi pekerjaan dengan jelas dan bantu rekan kerja saat diperlukan." },
+    { quote:"Disiplin bukan tentang diawasi, tetapi tentang tanggung jawab pada diri sendiri.", author:"Pengingat kedisiplinan", tip:"Datang tepat waktu, ikuti prosedur kerja, dan gunakan APD sesuai area kerja." },
+    { quote:"Jangan takut belajar hal baru. Setiap keahlian dimulai dari kemauan mencoba.", author:"Terus berkembang", tip:"Manfaatkan waktu untuk mempelajari satu hal baru dari pekerjaan hari ini." },
+    { quote:"Kualitas bukan kebetulan. Kualitas lahir dari perhatian pada setiap detail.", author:"Pengingat kualitas", tip:"Ikuti standar kerja dan segera laporkan bila menemukan ketidaksesuaian." },
+    { quote:"Sikap positif tidak menghilangkan tantangan, tetapi membantu kita menghadapinya.", author:"Tetap optimis", tip:"Jaga komunikasi yang sopan dan tetap tenang ketika menghadapi kendala." },
+    { quote:"Keselamatan adalah prioritas. Tidak ada pekerjaan yang lebih penting daripada pulang dengan selamat.", author:"Utamakan keselamatan", tip:"Jangan melewati pelindung mesin atau mengambil jalan pintas yang berisiko." },
+    { quote:"Hari yang baik dimulai dari niat baik dan usaha terbaik.", author:"Semangat pagi", tip:"Atur prioritas pekerjaan agar tugas penting dapat diselesaikan tepat waktu." },
+    { quote:"Hasil terbaik tercipta ketika kita peduli pada pekerjaan dan orang di sekitar kita.", author:"Tumbuh bersama", tip:"Jaga kebersihan area kerja dan pilah sampah sesuai tempat yang disediakan." },
+    { quote:"Kesalahan adalah kesempatan untuk memperbaiki cara kerja.", author:"Terus belajar", tip:"Jika menemukan masalah, hentikan proses bila berisiko dan laporkan kepada atasan." },
+    { quote:"Konsistensi mengubah usaha sederhana menjadi pencapaian.", author:"Jaga konsistensi", tip:"Pastikan instruksi kerja dipahami sebelum memulai tugas." },
+    { quote:"Saling menghargai membuat tempat kerja menjadi lebih nyaman dan produktif.", author:"Budaya saling menghormati", tip:"Hargai perbedaan, hindari candaan yang merendahkan, dan gunakan bahasa yang santun." },
+    { quote:"Berikan yang terbaik bukan untuk menjadi sempurna, tetapi untuk terus menjadi lebih baik.", author:"Satu langkah lebih baik", tip:"Selesaikan pekerjaan sesuai standar tanpa mengabaikan keselamatan." }
+  ];
+  function renderDailyContent() {
+    const quote = document.getElementById("daily-quote");
+    const author = document.getElementById("daily-author");
+    const tip = document.getElementById("daily-tip");
+    const date = document.getElementById("motivation-date");
+    if (!quote || !author || !tip || !date) return;
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), 0, 0);
+    const dayOfYear = Math.floor((now - firstDay) / 86400000);
+    const item = entries[(dayOfYear + now.getFullYear()) % entries.length];
+    quote.textContent = item.quote;
+    author.textContent = "— " + item.author;
+    tip.textContent = item.tip;
+    date.textContent = new Intl.DateTimeFormat("id-ID", { weekday:"long", day:"numeric", month:"long", year:"numeric" }).format(now);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", renderDailyContent, { once:true });
+  else renderDailyContent();
+})();
+</script>
