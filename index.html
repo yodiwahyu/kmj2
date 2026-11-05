@@ -206,8 +206,6 @@ h2 { margin: 0; font-weight: 800; font-size: 1.1875rem; line-height: 1.25; lette
 .daily-quote { min-height:3.2em; }
 .daily-author { min-height:1.2em; }
 
-/* Konten motivasi diisi oleh script setelah struktur halaman siap. */
-
 /* Media sosial */
 .social-list { display: grid; gap: 10px; }
 .card {
@@ -376,7 +374,7 @@ footer .sign { color: var(--fg); font-weight: 700; font-size: .9375rem; }
      short : nama pendek di bawah ikon
      desc  : keterangan singkat layanan
      url   : alamat web app
-     icon  : calc, ticket, shield, doc, calendar, clock, link
+     icon  : calc, ticket, shield, doc, calendar, clock, link, book-open
      color : green, amber, teal, coral, violet
      tag   : opsional, misalnya "Baru"
     DAILY_CONTENT (motivasi dan tips yang berganti setiap tanggal)
@@ -388,7 +386,7 @@ footer .sign { color: var(--fg); font-weight: 700; font-size: .9375rem; }
 const LOGO_URL = "https://raw.githubusercontent.com/yodiwahyu/berkas/main/logo%20kanindo.png";
 
 /* Tampilkan kotak "Segera hadir" di sebelah ikon layanan (true / false) */
-const SHOW_SOON_TILE = true;
+const SHOW_SOON_TILE = false;
 
 const MENUS = [
   {
@@ -397,7 +395,7 @@ const MENUS = [
     desc: "Ikuti training induksi untuk karyawan baru.",
     url: "http://111.68.31.77/ikutitraining//",
     icon: "book-open",
-    color: "green"
+    color: "violet"
   },
   {
     title: "Simulasi Gaji & Lembur",
@@ -405,7 +403,7 @@ const MENUS = [
     desc: "Hitung perkiraan gaji dan upah lembur kamu.",
     url: "https://simulasigaji.vercel.app/",
     icon: "calc",
-    color: "red"
+    color: "coral"
   },
   {
     title: "Cek Voucher",
@@ -455,7 +453,8 @@ const ICONS = {
   link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1"/></svg>',
   instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/></svg>',
   tiktok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v11.2a3.7 3.7 0 1 1-3.7-3.7"/><path d="M14 3c.3 2.6 2 4.3 5 4.5"/></svg>',
-  spark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v5M12 15v5M4 12h5M15 12h5"/></svg>'
+  spark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v5M12 15v5M4 12h5M15 12h5"/></svg>',
+  'book-open': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>'
 };
 const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>';
 const ARROW_R = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
