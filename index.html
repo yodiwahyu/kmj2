@@ -374,7 +374,7 @@ footer .sign { color: var(--fg); font-weight: 700; font-size: .9375rem; }
      short : nama pendek di bawah ikon
      desc  : keterangan singkat layanan
      url   : alamat web app
-     icon  : calc, ticket, shield, doc, calendar, clock, link, book-open
+     icon  : calc, ticket, shield, doc, calendar, clock, link, book-open, message
      color : green, amber, teal, coral, violet
      tag   : opsional, misalnya "Baru"
     DAILY_CONTENT (motivasi dan tips yang berganti setiap tanggal)
@@ -420,6 +420,14 @@ const MENUS = [
     url: "https://bpjskmj2.vercel.app/",
     icon: "shield",
     color: "teal"
+  },
+  {
+    title: "Kotak Saran & Pengaduan",
+    short: "Saran & Pengaduan",
+    desc: "Sampaikan saran, masukan, atau pengaduan kamu.",
+    url: "http://111.68.31.77/suara",
+    icon: "message",
+    color: "green",
   }
 ];
 
@@ -454,7 +462,8 @@ const ICONS = {
   instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/></svg>',
   tiktok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v11.2a3.7 3.7 0 1 1-3.7-3.7"/><path d="M14 3c.3 2.6 2 4.3 5 4.5"/></svg>',
   spark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v5M12 15v5M4 12h5M15 12h5"/></svg>',
-  'book-open': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>'
+  'book-open': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+  message: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.5-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"/></svg>'
 };
 const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>';
 const ARROW_R = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
@@ -622,7 +631,7 @@ document.querySelectorAll("[data-contours]").forEach(function (svg) {
     { quote:"Kesalahan adalah kesempatan untuk memperbaiki cara kerja.", author:"Terus belajar", tip:"Jika menemukan masalah, hentikan proses bila berisiko dan laporkan kepada atasan." },
     { quote:"Konsistensi mengubah usaha sederhana menjadi pencapaian.", author:"Jaga konsistensi", tip:"Pastikan instruksi kerja dipahami sebelum memulai tugas." },
     { quote:"Saling menghargai membuat tempat kerja menjadi lebih nyaman dan produktif.", author:"Budaya saling menghormati", tip:"Hargai perbedaan, hindari candaan yang merendahkan, dan gunakan bahasa yang santun." },
-    { quote:"Berikan yang terbaik bukan untuk menjadi sempurna, tetapi untuk terus menjadi lebih baik.", author:"Satu langkah lebih baik", tip:"Selesaikan pekerjaan sesuai standar tanpa mengabaikan keselamatan." }
+    { quote:"Berikan yang terbaik bukan untuk menjadi sempurna, tetapi untuk terus menjadi lebih baik.", author:"Satu langkah lebih baik", tip:"Selesaikan pekerjaan sesuai standar tanpa mengabaikan keselamatan." },
     { quote:"Kualitas sebuah tas bukan sekadar bahan, tapi ketelitian tangan yang menjahitnya.", author:"Fokus Produksi", tip:"Perhatikan jahitan dan detail material. Hindari cacat produksi (reject) sekecil mungkin." },
     { quote:"Lingkungan kerja yang bersih mencerminkan pikiran yang jernih.", author:"Budaya 5R/5S", tip:"Terapkan 5R (Ringkas, Rapi, Resik, Rawat, Rajin) sebelum dan sesudah jam kerja." },
     { quote:"Kecepatan tanpa ketelitian hanya akan menghasilkan pengulangan kerja.", author:"Pengingat Efisiensi", tip:"Kerjakan dengan ritme yang pas. Lebih baik teliti di awal daripada harus membongkar (repair) di akhir." },
@@ -652,9 +661,8 @@ document.querySelectorAll("[data-contours]").forEach(function (svg) {
 
     const now = new Date();
 
-    // [PERBAIKAN]: Gunakan tanggal hari ini (1-31) sebagai urutan.
-    // getDate() menghasilkan angka 1-31. Dikurangi 1 karena urutan array dimulai dari 0.
-    // % entries.length berfungsi sebagai pengaman: jika jumlah motivasi kurang dari 31, ia akan otomatis mengulang dari awal tanpa error.
+    // Gunakan tanggal hari ini (1-31) sebagai urutan.
+    // % entries.length sebagai pengaman: jika jumlah motivasi kurang dari 31, otomatis mengulang dari awal.
     const todayIndex = (now.getDate() - 1) % entries.length;
     const item = entries[todayIndex];
 
